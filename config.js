@@ -1,8 +1,8 @@
 var conf = {};
 
 // Run the Kiwi server under a different user/group
-conf.user = "";
-conf.group = "";
+conf.user = "kiwi";
+conf.group = "kiwi";
 
 
 // Log file location
@@ -19,7 +19,7 @@ conf.servers = [];
 
 // Example server block
 conf.servers.push({
-    port:   7778,
+    port:   80,
     address: "0.0.0.0"
 });
 
@@ -67,7 +67,7 @@ conf.max_server_conns = 0;
  * See http://github.com/prawnsalad/KiwiIRC/wiki/Client-plugins
  */
 conf.client_plugins = [
-    // "http://server.com/kiwi/plugins/myplugin.html"
+    "/assets/plugins/filepicker.html"
 ];
 
 
@@ -166,18 +166,18 @@ conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
 // Default settings for the client. These may be changed in the browser
 conf.client = {
-    server: 'irc.kiwiirc.com',
+    server: '127.0.0.1',
     port:    6697,
     ssl:     true,
-    channel: '#kiwiirc',
+    channel: '#main',
     nick:    'kiwi_?'
 };
 
 
 // If set, the client may only connect to this 1 IRC server
-//conf.restrict_server = "irc.kiwiirc.com";
-//conf.restrict_server_port = 6667;
-//conf.restrict_server_ssl = false;
+conf.restrict_server = "127.0.0.1";
+conf.restrict_server_port = 6697;
+conf.restrict_server_ssl = true;
 //conf.restrict_server_channel = "#kiwiirc";
 //conf.restrict_server_password = "";
 //conf.restrict_server_nick = "kiwi_";
