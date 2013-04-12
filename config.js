@@ -18,20 +18,20 @@ conf.log = "kiwi.log";
 conf.servers = [];
 
 // Example server block
-conf.servers.push({
-    port:   80,
-    address: "0.0.0.0"
-});
+//conf.servers.push({
+//    port:   80,
+//    address: "0.0.0.0"
+//});
 
 // Example SSL server block
-//conf.servers.push({
-//    port:     7777,
-//    address: "0.0.0.0",
-//
-//    ssl:   true,
-//    ssl_key: "server.key",
-//    ssl_cert: "cert.pem"
-//});
+conf.servers.push({
+    port:     7777,
+    address: "0.0.0.0",
+
+    ssl:   true,
+    ssl_key: "node.key",
+    ssl_cert: "node.cert"
+});
 
 
 
