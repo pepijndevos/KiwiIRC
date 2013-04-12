@@ -25,7 +25,7 @@ conf.servers = [];
 
 // Example SSL server block
 conf.servers.push({
-    port:     7777,
+    port:     443,
     address: "0.0.0.0",
 
     ssl:   true,
