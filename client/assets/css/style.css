@@ -29,7 +29,6 @@ html, body { height:100%; }
 #kiwi #toolbar #tabs { margin-right: 200px; }
 #kiwi #toolbar .panellist {
     overflow: hidden;
-    white-space: nowrap;
     display:block;
 }
 #kiwi #toolbar .panellist li {
@@ -318,7 +317,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
 
 #kiwi.theme_relaxed #toolbar .panellist li.active .activity { display:none; }
-#kiwi.theme_relaxed #toolbar .panellist li .activity.zero { visibility:hidden; }
+#kiwi.theme_relaxed #toolbar .panellist li .activity.zero { display:none; }
 #kiwi.theme_relaxed #toolbar .panellist li .activity {
     padding: 1px 3px; margin-left:1em;
     border-radius: 4px;
