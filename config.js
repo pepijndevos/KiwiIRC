@@ -29,8 +29,9 @@ conf.servers.push({
     address: "0.0.0.0",
 
     ssl:   true,
-    ssl_key: "node.key",
-    ssl_cert: "node.cert"
+    ssl_key: "/etc/ssl/certs/STAR_teamrelaychat_nl.key",
+    ssl_cert: "/etc/ssl/certs/STAR_teamrelaychat_nl.crt",
+    ssl_ca: ["/etc/ssl/certs/PositiveSSLCA2.crt", "/etc/ssl/certs/AddTrustExternalCARoot.crt"]
 });
 
 
