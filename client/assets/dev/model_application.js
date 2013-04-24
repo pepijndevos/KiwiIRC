@@ -290,7 +290,7 @@ _kiwi.model.Application = function () {
                 that.view.barsShow();
                 
                 if (auto_connect_details.channel) {
-                    that.controlbox.processInput('/JOIN ' + auto_connect_details.channel + ' ' + auto_connect_details.channel_key);
+                    _kiwi.gateway.join(auto_connect_details.channel, auto_connect_details.channel_key); 
                 }
             });
 
@@ -491,9 +491,6 @@ _kiwi.model.Application = function () {
                 }
 
                 panel.addMsg('[' + (event.nick||'') + ']', event.msg);
-                if(!_kiwi.app.panels.active.isServer()) {
-                    _kiwi.app.panels.active.addMsg('[' + (event.nick||'') + ']', event.msg);
-                }
             });
 
 
