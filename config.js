@@ -180,7 +180,7 @@ conf.client = {
     port:    6697,
     ssl:     true,
     channel: '#main',
-    nick:    'kiwi_?'
+    nick:    'kiwi_?',
     channel_key: '',
     settings: {
         theme: 'relaxed',
