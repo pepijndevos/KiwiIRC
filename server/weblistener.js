@@ -7,6 +7,7 @@ var ws          = require('socket.io'),
     dns         = require('dns'),
     url         = require('url'),
     _           = require('lodash'),
+    spdy        = require('spdy'),
     Client      = require('./client.js').Client,
     HttpHandler = require('./httphandler.js').HttpHandler,
     rehash      = require('./rehash.js'),
@@ -30,9 +31,9 @@ var WebListener = function (web_config, transports) {
 
 
     events.EventEmitter.call(this);
-    
+
     http_handler = new HttpHandler(web_config);
-    
+
     // Standard options for the socket.io connections
     ws_opts = {
         'log level': 0,
@@ -57,8 +58,8 @@ var WebListener = function (web_config, transports) {
             }
         }
 
-        hs = https.createServer(opts, handleHttpRequest);
-        
+        hs = spdy.createServer(opts, handleHttpRequest);
+
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, _.extend({ssl: true}, ws_opts));
         hs.listen(web_config.port, web_config.address, function () {
@@ -78,8 +79,8 @@ var WebListener = function (web_config, transports) {
 
     hs.on('error', function (err) {
         that.emit('error', err);
-    })
-    
+    });
+
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);
@@ -127,24 +128,30 @@ function authoriseConnection(handshakeData, callback) {
     }
 
     handshakeData.real_address = address;
-    
+
     // If enabled, don't go over the connection limit
     if (global.config.max_client_conns && global.config.max_client_conns > 0) {
         if (global.clients.numOnAddress(address) + 1 > global.config.max_client_conns) {
             return callback(null, false);
         }
     }
-        
-    dns.reverse(address, function (err, domains) {
-        if (err || domains.length === 0) {
-            handshakeData.revdns = address;
-        } else {
-            handshakeData.revdns = _.first(domains) || address;
-        }
-        
-        // All is well, authorise the connection
+
+
+    try {
+        dns.reverse(address, function (err, domains) {
+            if (err || domains.length === 0) {
+                handshakeData.revdns = address;
+            } else {
+                handshakeData.revdns = _.first(domains) || address;
+            }
+
+            // All is well, authorise the connection
+            callback(null, true);
+        });
+    } catch (err) {
+        handshakeData.revdns = address;
         callback(null, true);
-    });
+    }
 }
 
 function newConnection(websocket) {

@@ -34,7 +34,11 @@ conf.servers.push({
     ssl_ca: ["/etc/ssl/certs/PositiveSSLCA2.crt", "/etc/ssl/certs/AddTrustExternalCARoot.crt"]
 });
 
-
+// Network interface for outgoing connections
+conf.outgoing_address = {
+    IPv4: '0.0.0.0'
+    //IPv6: '::'
+};
 
 // Do we want to enable the built in Identd server?
 conf.identd = {
@@ -61,6 +65,11 @@ conf.max_client_conns = 5;
 //   - Kiwi is running in restricted server mode.
 conf.max_server_conns = 0;
 
+/*
+* Default encoding to be used by the server
+* As specified and limited to iconv-lite library support.
+*/
+conf.default_encoding = 'UTF-8';
 
 /*
  * Client side plugins
@@ -172,6 +181,15 @@ conf.client = {
     ssl:     true,
     channel: '#main',
     nick:    'kiwi_?'
+    channel_key: '',
+    settings: {
+        theme: 'relaxed',
+        channel_list_style: 'tabs',
+        scrollback: 250,
+        show_joins_parts: true,
+        show_timestamps: false,
+        mute_sounds: false
+    }
 };
 
 
@@ -180,6 +198,7 @@ conf.restrict_server = "127.0.0.1";
 conf.restrict_server_port = 6697;
 conf.restrict_server_ssl = true;
 //conf.restrict_server_channel = "#kiwiirc";
+//conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";
 //conf.restrict_server_nick = "kiwi_";
 

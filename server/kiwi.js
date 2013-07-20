@@ -1,5 +1,6 @@
 var fs          = require('fs'),
     _           = require('lodash'),
+    util        = require('util'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
     rehash      = require('./rehash.js'),
@@ -28,7 +29,7 @@ if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
             var logfile = fs.openSync(log_file_name, 'a'),
                 out;
 
-            out = Array.prototype.join.apply(arguments, [' ']);
+            out = util.format.apply(util, arguments);
 
             // Make sure we out somthing to log and we have an open file
             if (!out || !logfile) return;
@@ -66,7 +67,7 @@ modules.registerPublisher(global.modules);
 // Load any modules in the config
 if (global.config.module_dir) {
     (global.config.modules || []).forEach(function (module_name) {
-        if (modules.load(global.config.module_dir + module_name + '.js')) {
+        if (modules.load(module_name)) {
             console.log('Module ' + module_name + ' loaded successfuly');
         } else {
             console.log('Module ' + module_name + ' failed to load');
@@ -81,6 +82,10 @@ if (global.config.module_dir) {
 global.clients = {
     clients: Object.create(null),
     addresses: Object.create(null),
+
+    // Local and foriegn port pairs for identd lookups
+    // {'65483_6667': client_obj, '54356_6697': client_obj}
+    port_pairs: {},
 
     add: function (client) {
         this.clients[client.hash] = client;
@@ -146,10 +151,23 @@ global.servers = {
  * Identd server
  */
 if (global.config.identd && global.config.identd.enabled) {
-    new Identd({
+    var identd_resolve_user = function(port_here, port_there) {
+        var key = port_here.toString() + '_' + port_there.toString();
+
+        if (typeof global.clients.port_pairs[key] == 'undefined') {
+            return;
+        }
+
+        return global.clients.port_pairs[key].username;
+    };
+
+    var identd_server = new Identd({
         bind_addr: global.config.identd.address,
-        bind_port: global.config.identd.port
-    }).start();
+        bind_port: global.config.identd.port,
+        user_id: identd_resolve_user
+    });
+
+    identd_server.start();
 }
 
 
@@ -230,6 +248,10 @@ process.on('SIGUSR1', function() {
 });
 
 
+process.on('SIGUSR2', function() {
+    console.log('Connected clients: ' + _.size(global.clients.clients).toString());
+    console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
+});
 
 
 /*
