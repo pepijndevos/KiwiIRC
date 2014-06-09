@@ -22,11 +22,11 @@ var module = new kiwiModules.Module('DNSBL');
 module.on('irc connecting', function (event, event_data) {
     event.wait = true;
 
-    var client_addr = event_data.connection.state.client.websocket.handshake.real_address;
+    var client_addr = event_data.connection.state.client.websocket.meta.real_address;
 
     isBlacklisted(client_addr, function(is_blocked) {
         if (is_blocked) {
-            var err = new Error('DNSBL blocked');
+            var err = new Error('DNSBL blocked (' + client_addr + ')');
             err.code = 'Blacklisted';
 
             event_data.connection.emit('error', err);

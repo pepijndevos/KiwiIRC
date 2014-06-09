@@ -55,6 +55,10 @@ conf.identd = {
 // Where the client files are
 conf.public_http = "client/";
 
+// Transports available to the client.
+// Behind an Apache reverse proxy? Uncomment the below - Apache does not support websockets!
+//conf.client_transports = ['polling'];
+
 // Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
 
@@ -69,7 +73,17 @@ conf.max_server_conns = 0;
 * Default encoding to be used by the server
 * As specified and limited to iconv-lite library support.
 */
-conf.default_encoding = 'UTF-8';
+conf.default_encoding = 'utf8';
+
+
+/*
+* Default GECOS (real name) for IRC connections
+* %n will be replaced with the users nick
+* %h will be replaced with the users hostname
+*/
+//conf.default_gecos = 'Web IRC Client';
+
+
 
 /*
  * Client side plugins
@@ -79,11 +93,6 @@ conf.default_encoding = 'UTF-8';
 conf.client_plugins = [
     "/assets/plugins/filepicker.html"
 ];
-
-
-
-// Enabled CAP extensions (See ENTER URL TO CAP INFO HERE PLS)
-conf.cap_options = [];
 
 
 
@@ -117,7 +126,7 @@ conf.reject_unauthorised_certificates = false;
 /*
  * Reverse proxy settings
  * Reverse proxies that have been reported to work can be found at:
- *     http://github.com/prawnsalad/KiwiIRC/wiki/Running-behind-a-proxy
+ *     https://kiwiirc.com/docs/installing/proxies
  */
 
 // Whitelisted HTTP proxies in CIDR format
@@ -158,17 +167,6 @@ conf.socks_proxy.user = null;
 conf.socks_proxy.pass = null;
 
 
-// Enabled transports for the browser to use
-conf.transports = [
-    "websocket",
-    "flashsocket",
-    "htmlfile",
-    "xhr-polling",
-    "jsonp-polling"
-];
-
-
-
 
 // Default quit message
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
@@ -184,13 +182,26 @@ conf.client = {
     channel_key: '',
     settings: {
         theme: 'relaxed',
+        text_theme: 'default',
         channel_list_style: 'tabs',
         scrollback: 250,
         show_joins_parts: true,
         show_timestamps: false,
-        mute_sounds: false
-    }
+        use_24_hour_timestamps: true,
+        mute_sounds: false,
+        show_emoticons: true,
+        count_all_activity: true
+    },
+    window_title: 'Kiwi IRC'
 };
+
+// List of themes available for the user to choose from
+conf.client_themes = [
+    'relaxed',
+    'mini',
+    'cli',
+    'basic'
+];
 
 
 // If set, the client may only connect to this 1 IRC server
@@ -206,6 +217,6 @@ conf.restrict_server_ssl = true;
 
 
 /*
- * Do not ammend the below lines unless you understand the changes!
+ * Do not amend the below lines unless you understand the changes!
  */
 module.exports.production = conf;
